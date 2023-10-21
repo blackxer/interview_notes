@@ -5,6 +5,48 @@
 **2、快速排序**
 
 **3、归并排序**
+```python
+def sort(nums, l, r):
+    if l >= r:
+        return 
+
+    mid = (l + r) // 2
+
+    sort(nums, l, mid) # 对左边子数组进行排序
+    sort(nums, mid+1, r) # 对右边子数组进行排序
+
+    merge(nums, l, mid, r) # 合并排序好的左右子数组
+
+def merge(nums, l, mid, r):
+    for i in range(l, r+1):
+        temp[i] = nums[i]
+
+    i, j = l, mid+1
+    p = l
+    while p <= r:
+        if i == mid+1:
+            nums[p] = temp[j]
+            j += 1
+        elif j == r+1:
+            nums[p] = temp[i]
+            i += 1
+        elif temp[i] > temp[j]:
+            nums[p] = temp[j]
+            j += 1
+        else:
+            nums[p] = temp[i]
+            i += 1
+        
+        p += 1
+
+nums = [5,2,3,1]
+l, r = 0, len(nums)-1
+temp = nums.copy()
+sort(nums, l, r)
+return nums
+```
+- 912 排序数组
+- 315 计算右侧小于当前元素的个数
 
 
 ## 数组
@@ -304,6 +346,20 @@ class Solution:
 - 106 从中序与后序遍历序列构造二叉树
 - 889 根据前序和后序遍历构造二叉树
 - 297 二叉树的序列化与反序列化
+- 652 寻找重复的子树
+- 315 计算右侧小于当前元素的个数
+- 493 翻转对
+- 327 区间和的个数
+- 230 二叉搜索树中第K小的元素
+- 538 把二叉搜索树转换为累加树
+
+## 二叉搜索树
+- 98 验证⼆叉搜索树
+- 700 二叉搜索树中的搜索
+- 96 不同的二叉搜索树
+- 95 不同的二叉搜索树 II
+- 1373 二叉搜索子树的最大键值和
+
 
 
 
