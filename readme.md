@@ -3,6 +3,43 @@
 - https://github.com/PegasusWang/python_data_structures_and_algorithms/issues/16
 
 **2、快速排序**
+```python
+def sort(nums, lo, hi):
+    if lo >= hi:
+        return 
+    if len(set(nums[lo:hi+1])) == 1:
+        return 
+    
+    p = partition(nums, lo, hi)
+
+    sort(nums, lo, p-1)
+    sort(nums, p+1, hi)
+
+def partition(nums, lo, hi):
+    temp = nums[lo]
+    
+    l, r = lo + 1, hi
+    while l <= r:
+        while l <= r and nums[l] <= temp:
+            l += 1
+        # nums[l] > temp
+        while l <= r and nums[r] > temp:
+            r -=1
+        # nums[r] <= temp 
+        
+        if l > r:
+            break
+
+        nums[l], nums[r] = nums[r], nums[l]
+    
+    nums[lo] = nums[r]
+    nums[r] = temp
+    return r
+
+from random import shuffle
+shuffle(nums)
+sort(nums, 0, len(nums)-1)
+```
 
 **3、归并排序**
 ```python
