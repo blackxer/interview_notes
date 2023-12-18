@@ -405,7 +405,168 @@ class Solution:
 - 886 可能的⼆分法
 - 
 
+**1、并查集**
+```python
+class UF:
+    def __init__(self, n) -> None:
+        # 连通分量个数，初始为n个，n 为图中节点的个数
+        self.count = n 
+        # 存储每个节点的⽗节点，初始时，每个节点的父节点为自己
+        self.parent = list(range(n)) 
+
+    # 将节点 p 和节点 q 连通
+    def union(self, p, q):
+        rootP = self.find(p)
+        rootQ = self.find(q)
+        if rootP == rootQ:
+            return
+        
+        self.parent[rootP] = rootQ
+        # 两个连通分量合并成⼀个连通分量
+        self.count -= 1
+
+    # 判断节点 p 和节点 q 是否连通
+    def connected(self, p, q):
+        rootP = self.find(p)
+        rootQ = self.find(q)
+        return rootP == rootQ 
+    
+    # 路径压缩
+    def find(self, x):
+        if self.parent[x] != x:
+            self.parent[x] = self.find(self.parent[x])
+        return self.parent[x]
+            
+    # 返回图中的连通分量个数
+    def count(self):
+        return self.count
+```
+- 323 ⽆向图中连通分量的数目
+- 261 以图判树
+- 990 题等式⽅程的可满⾜性
+
+**2、最小生成树**，Kruskal 算法（克鲁斯卡尔算法）
+思路：
+
+1）先对所有边按照权重从⼩到⼤排序，从权重最⼩的边开始，选择合适的边加⼊ mst 集合，这样挑出来的边组成的树就是权重和最⼩的。
+
+2）使用 Union-Find 并查集算法，来保证挑选出来的这些边组成的⼀定是⼀棵树，⽽不会包含环或者形成⼀⽚森林
+
+3）如果⼀条边的两个节点已经是连通的，则这条边会使树中出现环；如果最后的连通分量总数⼤于 1，则说明形成的是森林⽽不是⼀棵树。
+
+- 1135 最低成本联通所有城市
+- 1584 连接所有点的最小费用
+
+**3、最小生成树**，Prim 算法（普里姆算法）
+使用切分定理，思路：
+
+1）选取图中任意一个节点作为起始节点，对其所有邻边进行切分
+
+2）选取权重最小的横切边，加入最小生成树
+
+3）迭代上述流程，直至切分完所有节点，得到最终的最小生成树
+
+```python
+from queue import PriorityQueue
+from math import fabs
+from typing import List
+
+class Prim:
+    def __init__(self, graph) -> None:
+        # 核⼼数据结构，存储「横切边」的优先级队列
+        self.q = PriorityQueue(len(graph)*len(graph))
+        # 类似 visited 数组的作⽤，记录哪些节点已经成为最⼩⽣成树的⼀部分
+        self.inMST = [False]*len(graph)
+        # 记录最⼩⽣成树的权重和
+        self.weight = 0
+        # graph 是⽤邻接表表示的⼀幅图，
+        # graph[s] 记录节点 s 所有相邻的边，
+        # 三元组 (from, to, weight) 表示⼀条边
+        self.graph = graph
+
+    def isMST(self) -> bool:
+        # 对 0 号节点进行切分，将 0 号节点加入最小生成树
+        self.inMST[0] = True
+        self.cut(0)
+        
+        while not self.q.empty():
+            _, edge = self.q.get()
+            if self.inMST[edge[1]]:
+                continue
+            self.weight += edge[2]
+            self.inMST[edge[1]] = True
+            self.cut(edge[1])
+        
+        return self.weight
+            
+    def cut(self, node):
+        
+        for edge in self.graph[node]:
+            if self.inMST[edge[1]]:
+                continue
+            self.q.put((edge[2], edge))
+```
+- 1135 最低成本联通所有城市
+- 1584 连接所有点的最小费用
+
+**4、最短路径：Dijkstra 算法**
+```python
+
+```
+
 ## 回溯
+#### 模板
+回溯算法三要素：路径、选择列表、结束条件。模板代码如下：
+```python
+result = []
+def backtrack(路径, 选择列表):
+    if 满⾜结束条件:
+        result.add(路径)
+        return
+    
+    for 选择 in 选择列表:
+        做选择
+        backtrack(路径, 选择列表)
+        撤销选择
+```
+- 46 全排列
+- 51 N 皇后
+- 52 N 皇后 II
+
+#### 子集、排列、组合问题
+一共有如下几种题型：
+- 1）元素⽆重不可复选
+- 2）元素可重不可复选
+- 3）元素⽆重可复选
+
+子集和组合问题本质上是等价的，排列就是全排列问题。
+
+**1、⼦集（元素⽆重不可复选）**
+- 78 ⼦集
+
+**2、组合（元素⽆重不可复选）**
+- 77 组合
+
+**3、排列（元素⽆重不可复选）**
+- 46 排列
+
+**4、⼦集/组合（元素可重不可复选）**
+- 90 子集 II
+- 40 组合总和 II
+
+**5、排列（元素可重不可复选）**
+- 47 全排列 II
+
+**6、⼦集/组合（元素⽆重可复选）**
+- 39 组合总和
+
+**7、排列（元素⽆重可复选）**
+
+**8、集合划分问题**
+
+
+
+
 ## 动态规划
 
 **1、求最长递增子序列**，假设数组为 nums，注意，子序列是非连续的。
