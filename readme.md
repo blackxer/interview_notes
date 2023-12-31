@@ -406,6 +406,7 @@ class Solution:
 - 
 
 **1、并查集**
+
 ```python
 class UF:
     def __init__(self, n) -> None:
@@ -563,11 +564,77 @@ def backtrack(路径, 选择列表):
 **7、排列（元素⽆重可复选）**
 
 **8、集合划分问题**
+- 698 划分为k个相等的⼦集
 
+**9、DFS 算法秒杀所有岛屿题⽬**
+- 200 岛屿数量
+- 1254 统计封闭岛屿的数⽬
+- 1020 ⻜地的数量
+- 695 岛屿的最⼤⾯积
+- 1905 统计⼦岛屿
+- 694 不同的岛屿数量
 
+**10、BFS 算法**
+- 111 二叉树的最小深度
+- 752 打开转盘锁
+- 773 滑动谜题
 
 
 ## 动态规划
+>三要素：重叠⼦问题、最优⼦结构、状态转移⽅程
+
+>状态转移⽅程思路：明确 base case -> 明确「状态」-> 明确「选择」 -> 定义 dp 数组/函数的含义
+
+**1、斐波那契数**
+- 509 斐波那契数
+
+**2、凑零钱问题**：给你 k 种⾯值的硬币，⾯值分别为 c1, c2 ... ck，每种硬币的数量⽆限，再给⼀个总⾦额 amount，问最少需要⼏枚硬币凑出该⾦额，如果无法凑出，返回 -1。
+
+> dp 函数定义：dp(n) 表示，输⼊⼀个⽬标⾦额 n，返回凑出⽬标⾦额 n 所需的最少硬币数量。
+
+状态转移方程：
+$$  
+dp(n)=\left\{
+\begin{array}{l}
+-1, ~n<0 \\
+~~0, ~~n=0 \\
+~~\underset{coin\in coins}{min\left\{ dp(n-coin)+1 \right\}},n>0
+\end{array}
+\right.  
+$$
+
+自顶向下：
+```python
+memo = {}
+def dp(coins, n):
+    if n < 0: return -1
+    if n == 0: return 0
+    if n in memo: return memo[n]
+    res = float("inf")
+    for coin in coins:
+        if dp(coins, n-coin) == -1：continue
+        res = min(res, dp(coins, n-coin)+1)
+    memo[n] = res
+    return -1 if res == float("inf") else res
+```
+
+自底向上：
+
+> dp 数组定义：当⽬标⾦额为 i 时，⾄少需要 `dp[i]` 枚硬币凑出。
+
+```python
+dp = [amount+1 for _ in range(amount+1)]
+dp[0] = 0
+for i in ragne(1, amount+1):
+    for coin in coins:
+        if i - coin < 0: continue
+        dp[i] = min(dp[i], dp[i-coin] + 1)
+return -1 if dp[amount]==amount+1 else dp[amount]
+```
+相关题目：
+- 322 零钱兑换
+
+---
 
 **1、求最长递增子序列**，假设数组为 nums，注意，子序列是非连续的。
 
