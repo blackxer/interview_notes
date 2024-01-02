@@ -634,9 +634,55 @@ return -1 if dp[amount]==amount+1 else dp[amount]
 相关题目：
 - 322 零钱兑换
 
----
+**3、最小路径和**，输⼊为⼀个 n * n 的⼆维数组 matrix，请你计算从第⼀⾏落到最后⼀⾏，经过的路径和最⼩为多少
 
-**1、求最长递增子序列**，假设数组为 nums，注意，子序列是非连续的。
+> dp 函数定义：`dp(int[][] matrix, int i, int j)`表示从第⼀⾏`matrix[0][..]`向下落，落到位置 `matrix[i][j]` 的最⼩路径和
+
+状态转移方程：
+$$
+dp(matrix, i, j) = min(dp(matrix, i-1, j-1), dp(maxtrix, i-1, j), dp(matrix, i-1, j+1)), 0<=i,j<n
+$$
+
+自顶向下：
+```python
+memo = [[20000 for c in line] for line in matrix]
+def dp(matrix, i, j):
+    if i < 0 or j < 0 or i > len(matrix) - 1 or j > len(matrix) - 1:
+        return 20000
+
+    if i == 0:
+        return matrix[i][j]
+    
+    if memo[i][j] < 20000:
+        return memo[i][j]
+    
+    res = min(dp(matrix, i-1, j-1), dp(matrix, i-1, j), dp(matrix, i-1, j+1)) + matrix[i][j]
+    memo[i][j] = res
+
+    return res
+```
+
+自底向上：
+
+> dp 数组定义：落到位置`(i, j)`时的最小路径为 `dp[i][j]`
+
+```python
+dp = [[2000 for c in line] for line in matrix]
+dp[0] = matrix[0]
+for i in range(len(matrix)):
+    for j in range(len(matrix)):
+        if i-1<0 or j-1 <0 or j+1>len(matrix)-1:
+            continue
+        dp[i][j] = min(dp[i-1][j-1], dp[i-1][j], dp[i-1][j+1]) + matrix[i][j]
+
+return min(dp[len(matrix)-1])
+```
+相关题目：
+- 931 下降路径最⼩和
+
+
+
+**3、求最长递增子序列**，假设数组为 nums，注意，子序列是非连续的。
 
 dp 函数定义：dp(i) 表示以 nums[i] 这个数结尾的最⻓递增⼦序列的⻓度
 
